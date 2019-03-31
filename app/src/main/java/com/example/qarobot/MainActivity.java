@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     from = HttpUtils.sendMsg(msg);
                 } catch (Exception e)
                 {
+                    e.printStackTrace();
                     from = new ChatMessage(ChatMessage.Type.INPUT, "服务器挂了呢...");
                 }
                 Message message = Message.obtain();

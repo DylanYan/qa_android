@@ -17,8 +17,8 @@ import java.util.Date;
 
 
 public class HttpUtils {
-    private static String API_KEY = "534dc342ad15885dffc10d7b5f813451";
-    private static String URL = "http://www.tuling123.com/openapi/api";
+    //private static String API_KEY = "534dc342ad15885dffc10d7b5f813451";
+    private static String URL = "http://139.224.114.96:9000/qa";
     /**
      * 发送一个消息，并得到返回的消息
      * @param msg
@@ -57,7 +57,7 @@ public class HttpUtils {
         {
             e.printStackTrace();
         }
-        return URL + "?key=" + API_KEY + "&info=" + msg;
+        return URL + "?question=" + msg;
     }
     /**
      * Get请求，获得返回数据
@@ -74,8 +74,8 @@ public class HttpUtils {
         {
             url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(5 * 1000);
-            conn.setConnectTimeout(5 * 1000);
+            conn.setReadTimeout(60 * 1000);
+            conn.setConnectTimeout(60 * 1000);
             conn.setRequestMethod("GET");
             if (conn.getResponseCode() == 200)
             {
