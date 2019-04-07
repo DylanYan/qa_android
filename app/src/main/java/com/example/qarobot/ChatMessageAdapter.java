@@ -1,24 +1,39 @@
 package com.example.qarobot;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.widget.BaseAdapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.qarobot.entity.ChatMessage;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Date;
 import java.util.List;
 
 public class ChatMessageAdapter extends BaseAdapter {
+    private Context context;
     private LayoutInflater mInflater;
     private List<ChatMessage> mDatas;
+    private OnClickListener mOnClickListener;
     public ChatMessageAdapter(Context context, List<ChatMessage> datas)
     {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
         mDatas = datas;
+        mOnClickListener = (OnClickListener) context;
     }
     @Override
     public int getCount()
@@ -80,7 +95,31 @@ public class ChatMessageAdapter extends BaseAdapter {
         {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.content.setText(chatMessage.getMsg());
+        final String retMsg = chatMessage.getMsg().replace(" ", "\n");
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(retMsg);
+        if (retMsg.contains("请选择您需要查询的对象")) {
+            int startIndex = StringUtils.indexOf(retMsg, '[') + 1;
+            int endIndex = StringUtils.indexOf(retMsg, ']');
+            while (endIndex != -1) {
+                final String ambiguousEntity = retMsg.substring(startIndex, endIndex + 1);
+                spannableStringBuilder.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View view) {
+                        mOnClickListener.setAmbiguousEntity(ambiguousEntity);
+                    }
+                    @Override
+                    public void updateDrawState(@NonNull TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setColor(Color.BLUE);
+                    }
+                }, startIndex, endIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                startIndex = endIndex + 3;
+                endIndex = StringUtils.indexOf(retMsg, ']', startIndex);
+            }
+        }
+        viewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
+        viewHolder.content.setHighlightColor(Color.TRANSPARENT);
+        viewHolder.content.setText(spannableStringBuilder);
         viewHolder.createDate.setText(chatMessage.getDateStr());
         return convertView;
     }
@@ -89,5 +128,9 @@ public class ChatMessageAdapter extends BaseAdapter {
         public TextView createDate;
         public TextView name;
         public TextView content;
+    }
+
+    public interface OnClickListener {
+        public void setAmbiguousEntity(String entity);
     }
 }

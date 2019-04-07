@@ -2,30 +2,42 @@ package com.example.qarobot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.qarobot.entity.ChatMessage;
 import com.example.qarobot.util.HttpUtils;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ChatMessageAdapter.OnClickListener{
 
     public static final int REQUEST_VOICE = 1;
+
+    private static String lastQuestion;
     /**
      * 展示消息的listview
      */
@@ -123,7 +135,17 @@ public class MainActivity extends AppCompatActivity {
                 ChatMessage from = null;
                 try
                 {
-                    from = HttpUtils.sendMsg(msg);
+                    // 问题是完整的句子
+                    if (!msg.contains("[")) {
+                        from = HttpUtils.sendMsg(msg);
+                        lastQuestion = msg;
+                    } else {
+                        // 问题是一个精确实体，先找出精确实体对应的模糊实体，然后将原来问题中的模糊实体替换为精确实体
+                        int endIndex = StringUtils.indexOf(msg, "[");
+                        String entity = msg.substring(0, endIndex).trim();
+                        String lastQuestionDisambiguated = lastQuestion.replace(entity, msg);
+                        from = HttpUtils.sendMsg(lastQuestionDisambiguated);
+                    }
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -134,5 +156,10 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.sendMessage(message);
             };
         }.start();
+    }
+
+    @Override
+    public void setAmbiguousEntity(String entity) {
+        mMsg.setText(entity);
     }
 }

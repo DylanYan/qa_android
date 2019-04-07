@@ -51,7 +51,7 @@ public class ChatMessage {
     public void setDate(Date date)
     {
         this.date = date;
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.dateStr = df.format(date);
     }
     public String getName()
