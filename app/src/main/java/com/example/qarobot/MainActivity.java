@@ -1,5 +1,7 @@
 package com.example.qarobot;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int REQUEST_VOICE = 1;
     /**
      * 展示消息的listview
      */
@@ -33,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
      * 存储聊天消息
      */
     private List<ChatMessage> mDatas = new ArrayList<ChatMessage>();
+
+    private Button mVoiceButton;
     /**
      * 适配器
      */
@@ -61,8 +68,30 @@ public class MainActivity extends AppCompatActivity {
     {
         mChatView = (ListView) findViewById(R.id.id_chat_listView);
         mMsg = (EditText) findViewById(R.id.id_chat_msg);
-        mDatas.add(new ChatMessage(ChatMessage.Type.INPUT, "我是小貅貅，很高兴为您服务"));
+        mDatas.add(new ChatMessage(ChatMessage.Type.INPUT, "我是一休，很高兴为您服务"));
+        mVoiceButton =(Button) findViewById(R.id.id_chat_voice);
+        mVoiceButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RecogActivity.class);
+                startActivityForResult(intent, REQUEST_VOICE);
+            }
+        });
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_VOICE) {
+            String returnedData = data.getStringExtra("data_return");
+            returnedData = returnedData.substring(5, returnedData.length());
+            mMsg.setText(returnedData);
+        }
+    }
+
     public void sendMessage(View view)
     {
         final String msg = mMsg.getText().toString();
