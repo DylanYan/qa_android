@@ -139,12 +139,26 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
                     if (!msg.contains("[")) {
                         from = HttpUtils.sendMsg(msg);
                         lastQuestion = msg;
+                        String ans = from.getMsg();
+                        if (ans.contains("抱歉")) {
+                            ans = ans + "\n您可以点击下面的链接前往百度搜索：\nhttps://www.baidu.com/baidu?tn=monline_3_dg&ie=utf-8&wd="  + lastQuestion;
+                            from.setMsg(ans);
+                        }
                     } else {
                         // 问题是一个精确实体，先找出精确实体对应的模糊实体，然后将原来问题中的模糊实体替换为精确实体
                         int endIndex = StringUtils.indexOf(msg, "[");
                         String entity = msg.substring(0, endIndex).trim();
                         String lastQuestionDisambiguated = lastQuestion.replace(entity, msg);
                         from = HttpUtils.sendMsg(lastQuestionDisambiguated);
+                        // 解决TextView autoLink属性无法识别方括号的问题，把方括号的内容提到实体前面
+                        String description = msg.substring(endIndex + 1, msg.length() - 1).trim();
+                        String entityWithDescription = description + entity;
+                        String questionForWebSearch = lastQuestion.replace(entity, entityWithDescription);
+                        String ans = from.getMsg();
+                        if (ans.contains("抱歉")) {
+                            ans = ans + "\n您可以点击下面的链接前往百度搜索：\nhttps://www.baidu.com/baidu?tn=monline_3_dg&ie=utf-8&wd=" + questionForWebSearch;
+                            from.setMsg(ans);
+                        }
                     }
                 } catch (Exception e)
                 {

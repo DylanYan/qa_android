@@ -51,6 +51,7 @@
             android:focusable="true"
             android:clickable="true"
             android:lineSpacingExtra="2dp"
+            android:autoLink="web"
             />
     </LinearLayout>
 
