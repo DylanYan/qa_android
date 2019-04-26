@@ -99,9 +99,16 @@ public class ChatMessageAdapter extends BaseAdapter {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(retMsg);
         if (retMsg.contains("请选择您需要查询的对象")) {
             int startIndex = StringUtils.indexOf(retMsg, '[') + 1;
-            int endIndex = StringUtils.indexOf(retMsg, ']');
-            while (endIndex != -1) {
-                final String ambiguousEntity = retMsg.substring(startIndex, endIndex + 1);
+            int indexOfComma = StringUtils.indexOf(retMsg, ',');
+            while (indexOfComma >= -1) {
+                int endIndex;
+                // 保证最后一条记录不被忽略
+                if (indexOfComma == -1) {
+                    endIndex = retMsg.length() - 1;
+                } else {
+                    endIndex = indexOfComma;
+                }
+                final String ambiguousEntity = retMsg.substring(startIndex, endIndex);
                 spannableStringBuilder.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View view) {
@@ -112,9 +119,12 @@ public class ChatMessageAdapter extends BaseAdapter {
                         super.updateDrawState(ds);
                         ds.setColor(Color.BLUE);
                     }
-                }, startIndex, endIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                startIndex = endIndex + 3;
-                endIndex = StringUtils.indexOf(retMsg, ']', startIndex);
+                }, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (indexOfComma == -1) {
+                    break;
+                }
+                startIndex = indexOfComma + 2;
+                indexOfComma = StringUtils.indexOf(retMsg, ',', startIndex);
             }
         }
         viewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
