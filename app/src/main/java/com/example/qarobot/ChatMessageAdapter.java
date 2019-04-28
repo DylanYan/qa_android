@@ -28,8 +28,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ChatMessage> mDatas;
     private OnClickListener mOnClickListener;
-    public ChatMessageAdapter(Context context, List<ChatMessage> datas)
-    {
+    public ChatMessageAdapter(Context context, List<ChatMessage> datas) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
         mDatas = datas;
@@ -41,8 +40,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         return mDatas.size();
     }
     @Override
-    public Object getItem(int position)
-    {
+    public Object getItem(int position) {
         return mDatas.get(position);
     }
     @Override
@@ -54,8 +52,7 @@ public class ChatMessageAdapter extends BaseAdapter {
      * 接受到消息为1，发送消息为0
      */
     @Override
-    public int getItemViewType(int position)
-    {
+    public int getItemViewType(int position) {
         ChatMessage msg = mDatas.get(position);
         return msg.getType() == ChatMessage.Type.INPUT ? 1 : 0;
     }
@@ -65,15 +62,12 @@ public class ChatMessageAdapter extends BaseAdapter {
         return 2;
     }
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ChatMessage chatMessage = mDatas.get(position);
         ViewHolder viewHolder = null;
-        if (convertView == null)
-        {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
-            if (chatMessage.getType() == ChatMessage.Type.INPUT)
-            {
+            if (chatMessage.getType() == ChatMessage.Type.INPUT) {
                 convertView = mInflater.inflate(R.layout.main_chat_from_msg,
                         parent, false);
                 viewHolder.createDate = (TextView) convertView
@@ -81,8 +75,7 @@ public class ChatMessageAdapter extends BaseAdapter {
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_from_content);
                 convertView.setTag(viewHolder);
-            } else
-            {
+            } else {
                 convertView = mInflater.inflate(R.layout.main_chat_send_msg,
                         null);
                 viewHolder.createDate = (TextView) convertView
@@ -91,8 +84,7 @@ public class ChatMessageAdapter extends BaseAdapter {
                         .findViewById(R.id.chat_send_content);
                 convertView.setTag(viewHolder);
             }
-        } else
-        {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final String retMsg = chatMessage.getMsg().replace(" ", "\n");

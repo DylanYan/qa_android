@@ -1,26 +1,22 @@
 package com.example.qarobot.entity;
 
 public class CommonException extends RuntimeException {
-    public CommonException()
-    {
+    public CommonException() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    public CommonException(String detailMessage, Throwable throwable)
-    {
+    public CommonException(String detailMessage, Throwable throwable) {
         super(detailMessage, throwable);
         // TODO Auto-generated constructor stub
     }
 
-    public CommonException(String detailMessage)
-    {
+    public CommonException(String detailMessage) {
         super(detailMessage);
         // TODO Auto-generated constructor stub
     }
 
-    public CommonException(Throwable throwable)
-    {
+    public CommonException(Throwable throwable) {
         super(throwable);
         // TODO Auto-generated constructor stub
     }

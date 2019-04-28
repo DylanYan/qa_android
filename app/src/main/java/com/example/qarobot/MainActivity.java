@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
         }
     };
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_chatting);
@@ -76,8 +75,7 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
         mAdapter = new ChatMessageAdapter(this, mDatas);
         mChatView.setAdapter(mAdapter);
     }
-    private void initView()
-    {
+    private void initView() {
         mChatView = (ListView) findViewById(R.id.id_chat_listView);
         mMsg = (EditText) findViewById(R.id.id_chat_msg);
         mDatas.add(new ChatMessage(ChatMessage.Type.INPUT, "我是一休，很高兴为您服务"));
@@ -104,12 +102,10 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
         }
     }
 
-    public void sendMessage(View view)
-    {
+    public void sendMessage(View view) {
         final String msg = mMsg.getText().toString();
-        if (TextUtils.isEmpty(msg))
-        {
-            Toast.makeText(this, "您还没有填写信息呢...", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(msg)) {
+            Toast.makeText(this, "您还没有输入文字...", Toast.LENGTH_SHORT).show();
             return;
         }
         ChatMessage to = new ChatMessage(ChatMessage.Type.OUTPUT, msg);
@@ -121,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
         // 关闭软键盘
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         // 得到InputMethodManager的实例
-        if (imm.isActive())
-        {
+        if (imm.isActive()) {
             // 如果开启
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
                     InputMethodManager.HIDE_NOT_ALWAYS);
@@ -133,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
             public void run()
             {
                 ChatMessage from = null;
-                try
-                {
+                try {
                     // 问题是完整的句子
                     if (!msg.contains("[")) {
                         from = HttpUtils.sendMsg(msg);
@@ -160,8 +154,7 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
                             from.setMsg(ans);
                         }
                     }
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                     from = new ChatMessage(ChatMessage.Type.INPUT, "服务器挂了呢...");
                 }

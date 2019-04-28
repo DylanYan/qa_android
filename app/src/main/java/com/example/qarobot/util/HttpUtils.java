@@ -34,11 +34,9 @@ public class HttpUtils {
         Gson gson = new Gson();
         Result result = gson.fromJson(res, Result.class);
         if (result.getCode() > 400000 || result.getText() == null
-                || result.getText().trim().equals(""))
-        {
+                || result.getText().trim().equals("")) {
             message.setMsg("该功能等待开发...");
-        }else
-        {
+        } else {
             message.setMsg(result.getText());
         }
         message.setType(ChatMessage.Type.INPUT);
@@ -52,11 +50,9 @@ public class HttpUtils {
      */
     private static String setParams(String msg)
     {
-        try
-        {
+        try {
             msg = URLEncoder.encode(msg, "UTF-8");
-        } catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return URL + "?question=" + msg;
@@ -72,15 +68,13 @@ public class HttpUtils {
         HttpURLConnection conn = null;
         InputStream is = null;
         ByteArrayOutputStream baos = null;
-        try
-        {
+        try {
             url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(60 * 1000);
             conn.setConnectTimeout(60 * 1000);
             conn.setRequestMethod("GET");
-            if (conn.getResponseCode() == 200)
-            {
+            if (conn.getResponseCode() == 200) {
                 is = conn.getInputStream();
                 baos = new ByteArrayOutputStream();
                 int len = -1;
@@ -91,30 +85,23 @@ public class HttpUtils {
                 }
                 baos.flush();
                 return baos.toString();
-            } else
-            {
+            } else {
                 throw new CommonException("服务器连接错误！");
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new CommonException("服务器连接错误！");
-        } finally
-        {
-            try
-            {
+        } finally {
+            try {
                 if (is != null)
                     is.close();
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            try
-            {
+            try {
                 if (baos != null)
                     baos.close();
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             conn.disconnect();

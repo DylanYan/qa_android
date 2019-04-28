@@ -26,15 +26,12 @@ public class ChatMessage {
      * 发送人
      */
     private String name;
-    public enum Type
-    {
+    public enum Type {
         INPUT, OUTPUT
     }
-    public ChatMessage()
-    {
+    public ChatMessage() {
     }
-    public ChatMessage(Type type, String msg)
-    {
+    public ChatMessage(Type type, String msg) {
         super();
         this.type = type;
         this.msg = msg;
@@ -48,8 +45,7 @@ public class ChatMessage {
     {
         return date;
     }
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.dateStr = df.format(date);

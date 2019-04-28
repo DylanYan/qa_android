@@ -49,7 +49,7 @@
             android:gravity="center_vertical"
             android:lineSpacingExtra="2dp"
             android:minHeight="50dp"
-            android:text="有大吗。。。"
+            android:text="我有个问题"
             android:textColor="#000"
             android:textSize="18sp" />
     </RelativeLayout>
