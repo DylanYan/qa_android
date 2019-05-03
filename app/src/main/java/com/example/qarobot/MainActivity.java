@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
             return;
         }
         if (requestCode == REQUEST_VOICE) {
-            String returnedData = data.getStringExtra("data_return");
-            returnedData = returnedData.substring(5, returnedData.length());
+            String returnedData = data.getStringExtra("data_return").trim();
+            returnedData = returnedData.substring(6, returnedData.length());
             mMsg.setText(returnedData);
         }
     }
@@ -142,7 +142,19 @@ public class MainActivity extends AppCompatActivity implements ChatMessageAdapte
                         // 问题是一个精确实体，先找出精确实体对应的模糊实体，然后将原来问题中的模糊实体替换为精确实体
                         int endIndex = StringUtils.indexOf(msg, "[");
                         String entity = msg.substring(0, endIndex).trim();
-                        String lastQuestionDisambiguated = lastQuestion.replace(entity, msg);
+                        String lastQuestionDisambiguated = null;
+                        // 原问题中如果只有西方人姓名的一部分，则将其替换为完整的姓名，例如将“乔布斯”替换为“史蒂夫·乔布斯”
+                        if (entity.contains("·")) {
+                            String[] subEntityArray = entity.split("·");
+                            for (int i = 0; i < subEntityArray.length; i++) {
+                                String subEntity = subEntityArray[i];
+                                if (lastQuestion.contains(subEntity)) {
+                                    lastQuestionDisambiguated = lastQuestion.replace(subEntity, msg);
+                                }
+                            }
+                        } else {
+                            lastQuestionDisambiguated = lastQuestion.replace(entity, msg);
+                        }
                         from = HttpUtils.sendMsg(lastQuestionDisambiguated);
                         // 解决TextView autoLink属性无法识别方括号的问题，把方括号的内容提到实体前面
                         String description = msg.substring(endIndex + 1, msg.length() - 1).trim();
