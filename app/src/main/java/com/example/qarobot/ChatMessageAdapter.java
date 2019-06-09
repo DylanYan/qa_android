@@ -87,9 +87,10 @@ public class ChatMessageAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final String retMsg = chatMessage.getMsg().replace(" ", "\n");
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(retMsg);
+        String retMsg = chatMessage.getMsg();
         if (retMsg.contains("请选择您需要查询的对象")) {
+            retMsg = retMsg.replace(" ", "\n");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(retMsg);
             int startIndex = StringUtils.indexOf(retMsg, '[') + 1;
             int indexOfComma = StringUtils.indexOf(retMsg, ',');
             while (indexOfComma >= -1) {
@@ -118,10 +119,12 @@ public class ChatMessageAdapter extends BaseAdapter {
                 startIndex = indexOfComma + 2;
                 indexOfComma = StringUtils.indexOf(retMsg, ',', startIndex);
             }
+            viewHolder.content.setText(spannableStringBuilder);
+        } else {
+            viewHolder.content.setText(retMsg);
         }
         viewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
         viewHolder.content.setHighlightColor(Color.TRANSPARENT);
-        viewHolder.content.setText(spannableStringBuilder);
         viewHolder.createDate.setText(chatMessage.getDateStr());
         return convertView;
     }

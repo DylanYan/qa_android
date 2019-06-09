@@ -18,8 +18,8 @@ import java.util.Date;
 
 public class HttpUtils {
     //private static String API_KEY = "534dc342ad15885dffc10d7b5f813451";
-    //private static String URL = "http://139.224.114.96:9000/qa";
-    private static String URL = "http://192.168.0.111:9000/qa";
+    private static String URL = "http://139.224.114.96:9000/qa";
+    //private static String URL = "http://192.168.0.111:9000/qa";
 
     /**
      * 发送一个消息，并得到返回的消息
